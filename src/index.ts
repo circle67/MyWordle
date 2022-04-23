@@ -14,6 +14,14 @@ interface WordleGame {
     maxTries: number;
     currentInput: string;
     win: boolean;
+    stateHistory: string[];
+}
+
+enum MessagePriority {
+    Normal,
+    Warning,
+    Danger,
+    Success,
 }
 
 var game: WordleGame = {
@@ -23,7 +31,8 @@ var game: WordleGame = {
     wordLength: 5,
     maxTries: 6,
     currentInput: '',
-    win: false
+    win: false,
+    stateHistory: []
 };
 var alphabet: string = alphabetArr.join('');
 
@@ -79,6 +88,8 @@ function submit() {
             }
         }
 
+        game.stateHistory.push(state);
+
         if (state === '00000') {
             flip(state);
             win();
@@ -86,7 +97,7 @@ function submit() {
             nextRow(state);
         }
     } else {
-        showMessage('Invalid input!', '');
+        showMessage('Invalid input!', MessagePriority.Danger);
     }
 
     console.log('State:', state);
@@ -132,6 +143,7 @@ function win() {
 function end() {
     console.log('Ending...');
     reset();
+    showMessage(game.stateHistory.join('\n'), MessagePriority.Normal);
 }
 
 function reset() {
@@ -143,7 +155,7 @@ function generateSecretWord(): string {
     return WORD_LIST[random];
 }
 
-function showMessage(message: string, priority: string) {
+function showMessage(message: string, priority: MessagePriority) {
     var i: number = 0;
     var speed: number = 50; // Higher is slower
     
