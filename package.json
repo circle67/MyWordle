@@ -1,0 +1,29 @@
+{
+  "name": "mywordle",
+  "version": "0.0.1",
+  "description": "My Wordle clone for... reasons...",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/circle67/MyWordle.git"
+  },
+  "scripts": {
+    "watch": "webpack --watch",
+    "build": "webpack"
+  },
+  "author": "circle67",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/circle67/MyWordle/issues"
+  },
+  "homepage": "https://github.com/circle67/MyWordle#readme",
+  "devDependencies": {
+    "alphabet": "^1.0.0",
+    "css-loader": "^6.7.1",
+    "html-webpack-plugin": "^5.5.0",
+    "style-loader": "^3.3.1",
+    "ts-loader": "^9.2.8",
+    "webpack": "^5.72.0",
+    "webpack-cli": "^4.9.2"
+  }
+}
