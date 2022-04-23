@@ -1,3 +1,5 @@
+// TODO: FIX WORD LISTS, THEY DO NOT ALIGN
+
 // Different file types & resources
 import './styles.css';
 
@@ -5,6 +7,8 @@ import './styles.css';
 import { WORD_LIST } from "./wordList";
 import { VALID_GUESSES } from "./validGuesses";
 var alphabetArr = require('alphabet');
+
+const alphabet: string = alphabetArr.join('');
 
 interface WordleGame {
     row: number;
@@ -15,6 +19,7 @@ interface WordleGame {
     currentInput: string;
     win: boolean;
     stateHistory: string[];
+    playHistory: number[];
 }
 
 enum MessagePriority {
@@ -32,9 +37,9 @@ var game: WordleGame = {
     maxTries: 6,
     currentInput: '',
     win: false,
-    stateHistory: []
+    stateHistory: [],
+    playHistory: [],
 };
-var alphabet: string = alphabetArr.join('');
 
 document.addEventListener('keyup', (e) => {
     console.log(e.key);
@@ -142,12 +147,51 @@ function win() {
 
 function end() {
     console.log('Ending...');
+    showMessage(game.stateHistory.join('\t'), MessagePriority.Normal);
+
+    if (game.win) {
+        game.playHistory.push(game.stateHistory.length);
+    } else {
+        game.playHistory.push(-1);
+    }
+
     reset();
-    showMessage(game.stateHistory.join('\n'), MessagePriority.Normal);
 }
 
 function reset() {
+    let board: HTMLElement = document.getElementById('board');
     console.log('Resetting...');
+
+    var newSecretWord: string = generateSecretWord();
+    checkNewSecretWord();
+    game.secretWord = newSecretWord;
+
+    game.row = 0;
+    game.col = 0;
+    game.currentInput = '';
+    game.win = false;
+    game.stateHistory = [];
+
+    function checkNewSecretWord() {
+        if (newSecretWord === game.secretWord) {
+            newSecretWord = generateSecretWord();
+            checkNewSecretWord();
+        }
+    }
+
+    // x, y: indexes (as in "var i" for a loop that does not have another loop)
+    for (var x = 0; x < board.childNodes.length; x++) {
+        let row = board.childNodes.item(x);
+        for (var y = 0; y < row.childNodes.length; y++) {
+            row.childNodes.item(y).firstChild.textContent = '';
+            // @ts-expect-error
+            row.childNodes.item(y).className = 'input';
+        }
+    }
+}
+
+function getPlayHistory(): number[] {
+    return [];
 }
 
 function generateSecretWord(): string {
@@ -170,6 +214,10 @@ function showMessage(message: string, priority: MessagePriority) {
             setTimeout(typeWriter, speed);
         }
     }
+}
+
+function showModal() {
+    let modal: HTMLElement = document.getElementById('modal');
 }
 
 console.log(game);
