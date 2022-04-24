@@ -86,7 +86,7 @@ document.getElementById('resetButton').addEventListener('click', () => {
 });
 
 document.getElementById('shareButton').addEventListener('click', () => {
-    if (game.end) {
+    if (game.end && game.win) {
         var shareString: string = `MyWordle ${game.stateHistory.length}/${game.maxTries}\n`;
         // x, y: indexes (as in "var i" for a loop that does not have another loop)
         for (var x = 0; x < game.stateHistory.length; x++) {
