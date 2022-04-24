@@ -56,7 +56,8 @@ window.onbeforeunload = () => {
 }
 
 document.getElementById('resetButton').addEventListener('click', () => {
-    let board: HTMLElement = document.getElementById('board');
+    let board = document.getElementById('board');
+    let keyboard = document.getElementById('keyboard');
 
     game.row = 0;
     game.col = 0;
@@ -76,6 +77,12 @@ document.getElementById('resetButton').addEventListener('click', () => {
             col.className = 'input';
         }
     }
+    
+    keyboard.querySelectorAll('.key').forEach((key) => {
+        if (key.classList.contains('state-0') || key.classList.contains('state-1') || key.classList.contains('state-2')) {
+            key.className = 'key';
+        }
+    })
 });
 
 document.getElementById('shareButton').addEventListener('click', () => {
