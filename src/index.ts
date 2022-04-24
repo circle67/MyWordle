@@ -6,6 +6,7 @@ import './styles.css';
 // JS & Modules
 import { WORD_LIST } from "./wordList";
 import { VALID_GUESSES } from "./validGuesses";
+import { check } from './wordle';
 var alphabet = require('alphabet');
 
 interface WordleGame {
@@ -87,15 +88,7 @@ function submit() {
         valid = true;
         console.log('Valid input', game.currentInput);
         
-        for (var i = 0; i < game.currentInput.length; i++) {
-            if (game.currentInput[i] === game.secretWord[i]) {
-                state += '0';
-            } else if (game.secretWord.search(game.currentInput[i]) !== -1) {
-                state += '1';
-            } else {
-                state += '2';
-            }
-        }
+        state = check(game.currentInput, game.secretWord).join('');
 
         game.stateHistory.push(state);
 
@@ -189,8 +182,26 @@ function reset() {
     }
 }
 
-function share(): string {
-    return '';
+function share() {
+    var shareString: string = `MyWordle ${game.stateHistory.length}/${game.maxTries}\n`;
+    // x, y: indexes (as in "var i" for a loop that does not have another loop)
+    for (var x = 0; x < game.stateHistory.length; x++) {
+        var state: string = game.stateHistory[x];
+        for (var y = 0; y < game.stateHistory[x].length; y++) {
+            var char: string = state[y];
+            if (char === '0') {
+                shareString += '🟩';
+            } else if (char === '1') {
+                shareString += '🟨';
+            } else {
+                shareString += '⬛';
+            }
+        }
+        if (x < game.stateHistory.length - 1) {
+            shareString += '\n';
+        }
+    }
+    navigator.clipboard.writeText(shareString);
 }
 
 function getPlayHistory(): number[] {
