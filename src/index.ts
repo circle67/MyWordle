@@ -120,19 +120,23 @@ document.getElementById('statsButton').addEventListener('click', () => {
         winPercent: played === 0 ? 0 : Math.round(winNumber / played * 100),
         inThreePercent: played === 0 ? 0 : Math.round(inThreeNumber / played * 100)
     }
-    showMessage(`${stats.played} played\t${stats.winPercent}% won\t${stats.inThreePercent}% in three`)
+
+    showMessage(`${stats.played} played\t${stats.winPercent}% won\t${stats.inThreePercent}% in three`);
+    console.log(document.activeElement);
+    document.body.focus();
+    console.log(document.activeElement);
 })
 
 document.getElementById('keyboard').childNodes.forEach((row) => {
     row.childNodes.forEach((key) => {
         key.addEventListener('click', (e) => {
             // @ts-expect-error
-            var virtKey: string = e.target.firstChild.textContent;
-            if (virtKey !== '+' && virtKey !== '-') {
-                input(virtKey.toUpperCase());
-            } else if (virtKey === '+' && game.col === 5) {
+            var virtKey: string = e.target.getAttribute('key');
+            if (virtKey !== 'Enter' && virtKey !== 'Backspace') {
+                input(virtKey);
+            } else if (virtKey === 'Enter' && game.col === 5) {
                 submit();
-            } else if (virtKey === '-') {
+            } else if (virtKey === 'Backspace') {
                 backspace();
             }
         });
@@ -140,7 +144,7 @@ document.getElementById('keyboard').childNodes.forEach((row) => {
 });
 
 function input(letter: string) {
-    let board: HTMLElement = document.getElementById('board');
+    let board = document.getElementById('board');
     if (game.col < game.wordLength) {
         board.childNodes.item(game.row).childNodes.item(game.col).firstChild.textContent = letter;
 
@@ -150,7 +154,7 @@ function input(letter: string) {
 }
 
 function backspace() {
-    let board: HTMLElement = document.getElementById('board');
+    let board = document.getElementById('board');
     if (game.col > 0) {
         board.childNodes.item(game.row).childNodes.item(game.col - 1).firstChild.textContent = '';
 
@@ -183,18 +187,22 @@ function submit() {
 }
 
 function flip(state: string) {
-    let board: HTMLElement = document.getElementById('board');
+    let board = document.getElementById('board');
+    let keyboard = document.getElementById('keyboard');
 
     for (var i = 0; i < state.length; i++) {
         if (state[i] === '0') {
             // @ts-expect-error
             board.childNodes.item(game.row).childNodes.item(i).classList.add('state-0');
+            keyboard.querySelector(`[key="${game.currentInput[i].toUpperCase()}"]`).classList.add('state-0');
         } else if (state[i] === '1') {
             // @ts-expect-error
             board.childNodes.item(game.row).childNodes.item(i).classList.add('state-1');
+            keyboard.querySelector(`[key="${game.currentInput[i].toUpperCase()}"]`).classList.add('state-1');
         } else {
             // @ts-expect-error
             board.childNodes.item(game.row).childNodes.item(i).classList.add('state-2');
+            keyboard.querySelector(`[key="${game.currentInput[i].toUpperCase()}"]`).classList.add('state-2');
         }
     }
 }
@@ -214,8 +222,10 @@ function end() {
 
     if (game.win) {
         game.playHistory.push(game.stateHistory.length);
+        showMessage(`Good job, you got it in ${game.stateHistory.length}!`);
     } else {
         game.playHistory.push(-1);
+        showMessage(`The word was ${game.secretWord}`);
     }
     syncPlayHistory();
 }

@@ -8,7 +8,7 @@
     "url": "git+https://github.com/circle67/MyWordle.git"
   },
   "scripts": {
-    "watch": "webpack --watch",
+    "watch": "webpack --watch --config ./dev.config.js",
     "build-dev": "webpack --config ./dev.config.js",
     "build": "webpack --config ./prod.config.js"
   },

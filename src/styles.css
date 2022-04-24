@@ -5,8 +5,8 @@
     --bg-color: #1b1b1b;
     --text-color: #fff;
     --fg-color: #424242;
-    --correct-color: #2e7d32;
-    --semi-correct-color: #bc5100;
+    --correct-color: #538D4E;
+    --semi-correct-color: #B59F3B;
     --muted-color: #263238;
 }
 
@@ -20,16 +20,16 @@ body {
     font-family: 'Open Sans', sans-serif;
 }
 
-button {
+.btn {
     background-color: var(--correct-color);
     padding: 1rem;
-    border-radius: 1rem;
+    border-radius: .25rem;
     border: 0px;
     color: var(--text-color);
     cursor: pointer;
 }
 
-button:hover {
+.btn:hover {
     filter: brightness(.9);
 }
 
@@ -50,8 +50,8 @@ header h1 {
     justify-content: center;
 }
 
-.c-row button {
-    margin: 0px .5rem 0px .5rem;
+.c-row .btn {
+    margin: 0px .25rem 0px .25rem;
 }
 
 .game-c {
@@ -62,13 +62,13 @@ header h1 {
 
 .game-row {
     display: flex;
-    margin: .5rem 0px;
+    margin: .25rem 0px;
 }
 
 .message {
     min-height: 2rem;
     transition: background-color 500ms ease-in-out;
-    border-radius: 1rem;
+    border-radius: .25rem;
 }
 
 .message.hidden {
@@ -95,7 +95,7 @@ header h1 {
 }
 
 .input {
-    margin: 0px .5rem 0px .5rem;
+    margin: 0px .25rem 0px .25rem;
     width: 4rem;
     height: 4rem;
     border: 2px solid var(--fg-color);
@@ -103,7 +103,7 @@ header h1 {
     justify-content: center;
     align-items: center;
     transition: background-color 300ms ease-in, border 300ms ease-in;
-    border-radius: 0.5rem;
+    border-radius: .25rem;
 }
 
 .input p {
@@ -116,11 +116,11 @@ header h1 {
 .kbd-row {
     display: flex;
     justify-content: center;
-    margin: .1rem 0px;
+    margin: .125rem 0px;
 }
 
 .key {
-    margin: 0px .1rem 0px .1rem;
+    margin: 0px .125rem 0px .125rem;
     width: 3rem;
     height: 3rem;
     border: 2px solid var(--fg-color);
@@ -128,7 +128,7 @@ header h1 {
     justify-content: center;
     align-items: center;
     transition: background-color 300ms ease-in, border 300ms ease-in;
-    border-radius: 0.5rem;
+    border-radius: .25rem;
     cursor: pointer;
 }
 
@@ -137,19 +137,20 @@ header h1 {
     text-align: center;
     margin: 0px;
     user-select: none;
+    pointer-events: none
 }
 
-.input.state-0 {
-    border: 2px solid var(--correct-color);
-    background-color: var(--correct-color);
+.state-0 {
+    border: 2px solid var(--correct-color) !important;
+    background-color: var(--correct-color) !important;
 }
 
-.input.state-1 {
-    border: 2px solid var(--semi-correct-color);
-    background-color: var(--semi-correct-color);
+.state-1 {
+    border: 2px solid var(--semi-correct-color) !important;
+    background-color: var(--semi-correct-color) !important;
 }
 
-.input.state-2 {
-    border: 2px solid var(--muted-color);
-    background-color: var(--muted-color);
+.state-2 {
+    border: 2px solid var(--muted-color) !important;
+    background-color: var(--muted-color) !important;
 }
