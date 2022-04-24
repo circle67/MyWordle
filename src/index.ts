@@ -6,6 +6,7 @@ import './styles.css';
 // JS & Modules
 import { WORD_LIST } from "./wordList";
 import { VALID_GUESSES } from "./validGuesses";
+import Typed from 'typed.js';
 var alphabetArr = require('alphabet');
 
 const alphabet: string = alphabetArr.join('');
@@ -18,15 +19,9 @@ interface WordleGame {
     maxTries: number;
     currentInput: string;
     win: boolean;
+    end: boolean;
     stateHistory: string[];
     playHistory: number[];
-}
-
-enum MessagePriority {
-    Normal,
-    Warning,
-    Danger,
-    Success,
 }
 
 var game: WordleGame = {
@@ -37,12 +32,12 @@ var game: WordleGame = {
     maxTries: 6,
     currentInput: '',
     win: false,
+    end: false,
     stateHistory: [],
-    playHistory: [],
+    playHistory: getPlayHistory(),
 };
 
 document.addEventListener('keyup', (e) => {
-    console.log(e.key);
     if (alphabet.search(e.key) !== -1) {
         input(e.key.toUpperCase());
     } else if (e.key === 'Enter' && game.col === 5) {
@@ -51,6 +46,18 @@ document.addEventListener('keyup', (e) => {
         backspace();
     }
 });
+
+document.getElementById('resetButton').addEventListener('click', () => {
+    if (game.end) {
+        reset();
+    }
+});
+
+document.getElementById('shareButton').addEventListener('click', () => {
+    if (game.end) {
+        share();
+    }
+})
 
 function input(letter: string) {
     let board: HTMLElement = document.getElementById('board');
@@ -97,12 +104,13 @@ function submit() {
 
         if (state === '00000') {
             flip(state);
-            win();
+            game.win = true;
+            end();
         } else {
             nextRow(state);
         }
     } else {
-        showMessage('Invalid input!', MessagePriority.Danger);
+        showMessage('That is not an accepted word.');
     }
 
     console.log('State:', state);
@@ -138,24 +146,16 @@ function nextRow(state: string) {
     }
 }
 
-function win() {
-    console.log('You have won.');
-    game.win = true;
-    console.log(game);
-    end();
-}
-
 function end() {
-    console.log('Ending...');
-    showMessage(game.stateHistory.join('\t'), MessagePriority.Normal);
+    game.end = true;
+    console.log(game);
+    showMessage(game.stateHistory.join('\n'));
 
     if (game.win) {
         game.playHistory.push(game.stateHistory.length);
     } else {
         game.playHistory.push(-1);
     }
-
-    reset();
 }
 
 function reset() {
@@ -170,6 +170,7 @@ function reset() {
     game.col = 0;
     game.currentInput = '';
     game.win = false;
+    game.end = false;
     game.stateHistory = [];
 
     function checkNewSecretWord() {
@@ -183,11 +184,16 @@ function reset() {
     for (var x = 0; x < board.childNodes.length; x++) {
         let row = board.childNodes.item(x);
         for (var y = 0; y < row.childNodes.length; y++) {
-            row.childNodes.item(y).firstChild.textContent = '';
+            var col = row.childNodes.item(y)
+            col.firstChild.textContent = '';
             // @ts-expect-error
-            row.childNodes.item(y).className = 'input';
+            col.className = 'input';
         }
     }
+}
+
+function share() {
+
 }
 
 function getPlayHistory(): number[] {
@@ -199,25 +205,13 @@ function generateSecretWord(): string {
     return WORD_LIST[random];
 }
 
-function showMessage(message: string, priority: MessagePriority) {
-    var i: number = 0;
-    var speed: number = 50; // Higher is slower
-    
-    document.getElementById('message').textContent = '';
-    typeWriter();
-
-    // https://www.w3schools.com/howto/howto_js_typewriter.asp
-    function typeWriter() {
-        if (i < message.length) {
-            document.getElementById('message').textContent += message.charAt(i);
-            i++;
-            setTimeout(typeWriter, speed);
-        }
-    }
-}
-
-function showModal() {
-    let modal: HTMLElement = document.getElementById('modal');
+function showMessage(message: string) {
+    var speed: number = 50;
+    var typewriter: Typed = new Typed(document.getElementById('message'), {
+        strings: [message],
+        typeSpeed: speed,
+    });
+    typewriter.start();
 }
 
 console.log(game);

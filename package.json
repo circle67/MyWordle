@@ -26,6 +26,7 @@
     "webpack-cli": "^4.9.2"
   },
   "dependencies": {
-    "alphabet": "^1.0.0"
+    "alphabet": "^1.0.0",
+    "typed.js": "^2.0.12"
   }
 }
