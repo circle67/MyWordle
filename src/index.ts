@@ -6,10 +6,7 @@ import './styles.css';
 // JS & Modules
 import { WORD_LIST } from "./wordList";
 import { VALID_GUESSES } from "./validGuesses";
-import Typed from 'typed.js';
-var alphabetArr = require('alphabet');
-
-const alphabet: string = alphabetArr.join('');
+var alphabet = require('alphabet');
 
 interface WordleGame {
     row: number;
@@ -38,7 +35,7 @@ var game: WordleGame = {
 };
 
 document.addEventListener('keyup', (e) => {
-    if (alphabet.search(e.key) !== -1) {
+    if (alphabet.includes(e.key)) {
         input(e.key.toUpperCase());
     } else if (e.key === 'Enter' && game.col === 5) {
         submit();
@@ -192,8 +189,8 @@ function reset() {
     }
 }
 
-function share() {
-
+function share(): string {
+    return '';
 }
 
 function getPlayHistory(): number[] {
@@ -206,12 +203,17 @@ function generateSecretWord(): string {
 }
 
 function showMessage(message: string) {
-    var speed: number = 50;
-    var typewriter: Typed = new Typed(document.getElementById('message'), {
-        strings: [message],
-        typeSpeed: speed,
-    });
-    typewriter.start();
+    document.getElementById('message').firstChild.textContent = message;
+    // @ts-expect-error
+    document.getElementById('message').firstChild.className = 'showing';
+    document.getElementById('message').classList.remove('hidden');
+    document.getElementById('message').classList.add('showing');
+    setTimeout(() => {
+        // @ts-expect-error
+        document.getElementById('message').firstChild.className = 'hidden';
+        document.getElementById('message').classList.remove('showing');
+        document.getElementById('message').classList.add('hidden');
+    }, message.length * 150);
 }
 
 console.log(game);

@@ -63,6 +63,29 @@ button:hover {
 
 .message {
     min-height: 2rem;
+    transition: background-color 500ms ease-in-out;
+    border-radius: 1rem;
+}
+
+.message.hidden {
+    background-color: inherit;
+}
+
+.message.showing {
+    background-color: var(--muted-color);
+}
+
+.message p {
+    transition: color 300ms ease-in-out;
+    text-align: center;
+}
+
+.message p.hidden {
+    color: transparent;
+}
+
+.message p.showing {
+    color: var(--text-color);
 }
 
 .input {
