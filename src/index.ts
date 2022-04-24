@@ -22,6 +22,12 @@ interface WordleGame {
     playHistory: number[];
 }
 
+interface Stats {
+    played: number,
+    winPercent: number,
+    inThreePercent: number,
+}
+
 var game: WordleGame = {
     row: 0,
     col: 0,
@@ -45,14 +51,77 @@ document.addEventListener('keyup', (e) => {
     }
 });
 
+window.onbeforeunload = () => {
+    syncPlayHistory();
+}
+
 document.getElementById('resetButton').addEventListener('click', () => {
-    reset();
+    let board: HTMLElement = document.getElementById('board');
+    console.log('Resetting...');
+
+    game.row = 0;
+    game.col = 0;
+    game.currentInput = '';
+    game.secretWord = generateSecretWord();
+    game.win = false;
+    game.end = false;
+    game.stateHistory = [];
+
+    // x, y: indexes (as in "var i" for a loop that does not have another loop)
+    for (var x = 0; x < board.childNodes.length; x++) {
+        let row = board.childNodes.item(x);
+        for (var y = 0; y < row.childNodes.length; y++) {
+            var col = row.childNodes.item(y)
+            col.firstChild.textContent = '';
+            // @ts-expect-error
+            col.className = 'input';
+        }
+    }
 });
 
 document.getElementById('shareButton').addEventListener('click', () => {
     if (game.end) {
-        share();
+        var shareString: string = `MyWordle ${game.stateHistory.length}/${game.maxTries}\n`;
+        // x, y: indexes (as in "var i" for a loop that does not have another loop)
+        for (var x = 0; x < game.stateHistory.length; x++) {
+            var state: string = game.stateHistory[x];
+            for (var y = 0; y < game.stateHistory[x].length; y++) {
+                var char: string = state[y];
+                if (char === '0') {
+                    shareString += '🟩';
+                } else if (char === '1') {
+                    shareString += '🟨';
+                } else {
+                    shareString += '⬛';
+                }
+            }
+            if (x < game.stateHistory.length - 1) {
+                shareString += '\n';
+            }
+        }
+        navigator.clipboard.writeText(shareString);
+        showMessage('Record copied to clipboard!');
     }
+})
+
+document.getElementById('statsButton').addEventListener('click', () => {
+    var played: number = game.playHistory.length;
+    var winNumber: number = 0;
+    var inThreeNumber: number = 0;
+    game.playHistory.forEach((play) => {
+        if (play !== -1) {
+            winNumber++;
+        }
+        if (play <= 3 && play !== -1) {
+            inThreeNumber++;
+        }
+    });
+    var stats: Stats = {
+        played: played,
+        winPercent: Math.round(winNumber / played * 100),
+        inThreePercent: Math.round(inThreeNumber / played * 100)
+    }
+    showMessage(`${stats.played} played\t${stats.winPercent}% won\t${stats.inThreePercent}% in three`)
 })
 
 document.getElementById('keyboard').childNodes.forEach((row) => {
@@ -61,7 +130,7 @@ document.getElementById('keyboard').childNodes.forEach((row) => {
             // @ts-expect-error
             var virtKey: string = e.target.firstChild.textContent;
             if (virtKey !== '+' && virtKey !== '-') {
-                input(virtKey);
+                input(virtKey.toUpperCase());
             } else if (virtKey === '+' && game.col === 5) {
                 submit();
             } else if (virtKey === '-') {
@@ -159,67 +228,15 @@ function end() {
     } else {
         game.playHistory.push(-1);
     }
-}
-
-function reset() {
-    let board: HTMLElement = document.getElementById('board');
-    console.log('Resetting...');
-
-    var newSecretWord: string = generateSecretWord();
-    checkNewSecretWord();
-    game.secretWord = newSecretWord;
-
-    game.row = 0;
-    game.col = 0;
-    game.currentInput = '';
-    game.win = false;
-    game.end = false;
-    game.stateHistory = [];
-
-    function checkNewSecretWord() {
-        if (newSecretWord === game.secretWord) {
-            newSecretWord = generateSecretWord();
-            checkNewSecretWord();
-        }
-    }
-
-    // x, y: indexes (as in "var i" for a loop that does not have another loop)
-    for (var x = 0; x < board.childNodes.length; x++) {
-        let row = board.childNodes.item(x);
-        for (var y = 0; y < row.childNodes.length; y++) {
-            var col = row.childNodes.item(y)
-            col.firstChild.textContent = '';
-            // @ts-expect-error
-            col.className = 'input';
-        }
-    }
-}
-
-function share() {
-    var shareString: string = `MyWordle ${game.stateHistory.length}/${game.maxTries}\n`;
-    // x, y: indexes (as in "var i" for a loop that does not have another loop)
-    for (var x = 0; x < game.stateHistory.length; x++) {
-        var state: string = game.stateHistory[x];
-        for (var y = 0; y < game.stateHistory[x].length; y++) {
-            var char: string = state[y];
-            if (char === '0') {
-                shareString += '🟩';
-            } else if (char === '1') {
-                shareString += '🟨';
-            } else {
-                shareString += '⬛';
-            }
-        }
-        if (x < game.stateHistory.length - 1) {
-            shareString += '\n';
-        }
-    }
-    navigator.clipboard.writeText(shareString);
-    showMessage('Record copied to clipboard!');
+    syncPlayHistory();
 }
 
 function getPlayHistory(): number[] {
-    return [];
+    return JSON.parse(window.localStorage.getItem('playHistory')) || [];
+}
+
+function syncPlayHistory() {
+    window.localStorage.setItem('playHistory', JSON.stringify(game.playHistory));
 }
 
 function generateSecretWord(): string {
