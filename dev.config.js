@@ -1,4 +1,5 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require('path');
 
 module.exports = {
@@ -7,7 +8,7 @@ module.exports = {
     devtool: 'inline-source-map',
     module: {
         rules: [
-            { test: /\.css$/i, use: ['style-loader', 'css-loader'] },
+            { test: /\.css$/i, use: [MiniCssExtractPlugin.loader, 'css-loader'] },
             { test: /\.ts$/, use: 'ts-loader', exclude: /node_modules/ }
         ]
     },
@@ -19,6 +20,7 @@ module.exports = {
             title: 'MyWordle',
             template: 'src/index.html'
         }),
+        new MiniCssExtractPlugin()
     ],
     output: {
         filename: '[name].[contenthash].js',
