@@ -57,7 +57,6 @@ window.onbeforeunload = () => {
 
 document.getElementById('resetButton').addEventListener('click', () => {
     let board: HTMLElement = document.getElementById('board');
-    console.log('Resetting...');
 
     game.row = 0;
     game.col = 0;
@@ -118,8 +117,8 @@ document.getElementById('statsButton').addEventListener('click', () => {
     });
     var stats: Stats = {
         played: played,
-        winPercent: Math.round(winNumber / played * 100),
-        inThreePercent: Math.round(inThreeNumber / played * 100)
+        winPercent: played === 0 ? 0 : Math.round(winNumber / played * 100),
+        inThreePercent: played === 0 ? 0 : Math.round(inThreeNumber / played * 100)
     }
     showMessage(`${stats.played} played\t${stats.winPercent}% won\t${stats.inThreePercent}% in three`)
 })
@@ -147,8 +146,6 @@ function input(letter: string) {
 
         game.col++;
         game.currentInput += letter.toLowerCase();
-    } else {
-        console.log('Max word length reached!');
     }
 }
 
@@ -163,13 +160,11 @@ function backspace() {
 }
 
 function submit() {
-    console.log('Submitting', game.currentInput);
     var valid: boolean = false;
     var state: string = ''; // 0: match full; 1: match partial; 2: match none
 
     if (VALID_GUESSES.includes(game.currentInput)) {
         valid = true;
-        console.log('Valid input', game.currentInput);
 
         state = check(game.currentInput, game.secretWord).join('');
 
@@ -185,13 +180,10 @@ function submit() {
     } else {
         showMessage('That is not an accepted word.');
     }
-
-    console.log('State:', state);
 }
 
 function flip(state: string) {
     let board: HTMLElement = document.getElementById('board');
-    console.log('State:', state);
 
     for (var i = 0; i < state.length; i++) {
         if (state[i] === '0') {
@@ -214,14 +206,11 @@ function nextRow(state: string) {
     game.currentInput = '';
     if (game.row >= game.maxTries) {
         end();
-    } else {
-        console.log(game);
     }
 }
 
 function end() {
     game.end = true;
-    console.log(game);
 
     if (game.win) {
         game.playHistory.push(game.stateHistory.length);
@@ -257,5 +246,3 @@ function showMessage(message: string) {
         document.getElementById('message').classList.add('hidden');
     }, message.length * 150);
 }
-
-console.log(game);
