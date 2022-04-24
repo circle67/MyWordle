@@ -33,6 +33,10 @@ button:hover {
     filter: brightness(.9);
 }
 
+header h1 {
+    text-align: center;
+}
+
 .c {
     max-width: 500px;
     width: 100%;
@@ -82,10 +86,12 @@ button:hover {
 
 .message p.hidden {
     color: transparent;
+    user-select: none;
 }
 
 .message p.showing {
     color: var(--text-color);
+    user-select: auto;
 }
 
 .input {
@@ -104,6 +110,33 @@ button:hover {
     font-size: 2.5rem;
     text-align: center;
     margin: 0px;
+    user-select: none;
+}
+
+.kbd-row {
+    display: flex;
+    justify-content: center;
+    margin: .1rem 0px;
+}
+
+.key {
+    margin: 0px .1rem 0px .1rem;
+    width: 3rem;
+    height: 3rem;
+    border: 2px solid var(--fg-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 300ms ease-in, border 300ms ease-in;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
+.key p {
+    font-size: 2rem;
+    text-align: center;
+    margin: 0px;
+    user-select: none;
 }
 
 .input.state-0 {

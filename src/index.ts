@@ -46,9 +46,7 @@ document.addEventListener('keyup', (e) => {
 });
 
 document.getElementById('resetButton').addEventListener('click', () => {
-    if (game.end) {
-        reset();
-    }
+    reset();
 });
 
 document.getElementById('shareButton').addEventListener('click', () => {
@@ -56,6 +54,22 @@ document.getElementById('shareButton').addEventListener('click', () => {
         share();
     }
 })
+
+document.getElementById('keyboard').childNodes.forEach((row) => {
+    row.childNodes.forEach((key) => {
+        key.addEventListener('click', (e) => {
+            // @ts-expect-error
+            var virtKey: string = e.target.firstChild.textContent;
+            if (virtKey !== '+' && virtKey !== '-') {
+                input(virtKey);
+            } else if (virtKey === '+' && game.col === 5) {
+                submit();
+            } else if (virtKey === '-') {
+                backspace();
+            }
+        });
+    });
+});
 
 function input(letter: string) {
     let board: HTMLElement = document.getElementById('board');
@@ -87,7 +101,7 @@ function submit() {
     if (VALID_GUESSES.includes(game.currentInput)) {
         valid = true;
         console.log('Valid input', game.currentInput);
-        
+
         state = check(game.currentInput, game.secretWord).join('');
 
         game.stateHistory.push(state);
@@ -139,7 +153,6 @@ function nextRow(state: string) {
 function end() {
     game.end = true;
     console.log(game);
-    showMessage(game.stateHistory.join('\n'));
 
     if (game.win) {
         game.playHistory.push(game.stateHistory.length);
@@ -202,6 +215,7 @@ function share() {
         }
     }
     navigator.clipboard.writeText(shareString);
+    showMessage('Record copied to clipboard!');
 }
 
 function getPlayHistory(): number[] {
