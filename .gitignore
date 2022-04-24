@@ -1,5 +1,4 @@
 node_modules/
-docs/
 /package.json
 /package-lock.json
 /dev.config.json
