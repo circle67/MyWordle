@@ -9,6 +9,7 @@ import { VALID_GUESSES } from "./validGuesses";
 import { check } from './wordle';
 var alphabet = require('alphabet');
 
+// The main container for the game
 interface WordleGame {
     row: number;
     col: number;
@@ -22,6 +23,7 @@ interface WordleGame {
     playHistory: number[];
 }
 
+// Standardized stats
 interface Stats {
     played: number,
     winPercent: number,
@@ -31,7 +33,7 @@ interface Stats {
 var game: WordleGame = {
     row: 0,
     col: 0,
-    secretWord: generateSecretWord(), //faffs (test word)
+    secretWord: generateSecretWord(),
     wordLength: 5,
     maxTries: 6,
     currentInput: '',
@@ -201,15 +203,15 @@ function flip(state: string) {
         if (state[i] === '0') {
             // @ts-expect-error
             board.childNodes.item(game.row).childNodes.item(i).classList.add('state-0');
-            keyboard.querySelector(`[key="${game.currentInput[i].toUpperCase()}"]`).classList.add('state-0');
+            keyboard.querySelector(`[key="${game.currentInput[i].toUpperCase()}"]`).className = 'key state-0';
         } else if (state[i] === '1') {
             // @ts-expect-error
             board.childNodes.item(game.row).childNodes.item(i).classList.add('state-1');
-            keyboard.querySelector(`[key="${game.currentInput[i].toUpperCase()}"]`).classList.add('state-1');
+            keyboard.querySelector(`[key="${game.currentInput[i].toUpperCase()}"]`).className = 'key state-1';
         } else {
             // @ts-expect-error
             board.childNodes.item(game.row).childNodes.item(i).classList.add('state-2');
-            keyboard.querySelector(`[key="${game.currentInput[i].toUpperCase()}"]`).classList.add('state-2');
+            keyboard.querySelector(`[key="${game.currentInput[i].toUpperCase()}"]`).className = 'key state-2';
         }
     }
 }
@@ -226,7 +228,6 @@ function nextRow(state: string) {
 
 function end() {
     game.end = true;
-
     if (game.win) {
         game.playHistory.push(game.stateHistory.length);
         showMessage(`Good job, you got it in ${game.stateHistory.length}!`);

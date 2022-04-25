@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;700&display=swap);
+@import url(https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Open+Sans&display=swap);
 /*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */
 
 /* Document
@@ -366,6 +366,11 @@ body {
     background-color: var(--bg-color);
     color: var(--text-color);
     font-family: 'Open Sans', sans-serif;
+    font-weight: 400;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'DM Sans', sans-serif;
 }
 
 .btn {
@@ -475,17 +480,22 @@ header h1 {
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: var(--fg-color);
     transition: background-color 300ms ease-in, border 300ms ease-in;
     border-radius: .25rem;
     cursor: pointer;
 }
 
 .key p {
-    font-size: 2rem;
+    font-size: 1.5rem;
     text-align: center;
     margin: 0px;
     user-select: none;
     pointer-events: none
+}
+
+.key.enter p {
+    font-size: .75rem !important
 }
 
 .state-0 {
@@ -502,4 +512,3 @@ header h1 {
     border: 2px solid var(--muted-color) !important;
     background-color: var(--muted-color) !important;
 }
-
