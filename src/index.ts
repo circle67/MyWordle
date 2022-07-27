@@ -131,9 +131,7 @@ document.getElementById('statsButton').addEventListener('click', () => {
     }
 
     showMessage(`${stats.played} played\t${stats.winPercent}% won\t${stats.inThreePercent}% in three`);
-    console.log(document.activeElement);
     document.body.focus();
-    console.log(document.activeElement);
 })
 
 document.getElementById('keyboard').childNodes.forEach((row) => {
