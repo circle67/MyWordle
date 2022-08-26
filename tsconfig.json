@@ -1,11 +1,9 @@
 {
-    "compilerOptions": {
-        "outDir": "./dist/",
-        "sourceMap": true,
-        "noImplicitAny": true,
-        "module": "commonjs",
-        "target": "es5",
-        "allowJs": true,
-        "moduleResolution": "node",
-    }
+	"compilerOptions": {
+		"allowSyntheticDefaultImports": true,
+		"lib": ["ES2021", "DOM"],
+		"module": "ES2020",
+		"moduleResolution": "node",
+		"target": "ES2021"
+	}
 }
