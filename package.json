@@ -9,7 +9,7 @@
 	},
 	"scripts": {
 		"pack": "webpack",
-		"build": "webpack --mode production -d source-map -o ./doc"
+		"build": "webpack --mode production -d source-map -o ./docs"
 	},
 	"author": "circle67",
 	"license": "MIT",
