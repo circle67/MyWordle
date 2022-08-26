@@ -1,2 +1,3 @@
 node_modules/
-/package.json
+dev/
+package-lock.json
