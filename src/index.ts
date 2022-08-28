@@ -1,15 +1,12 @@
-// TODO: FIX WORD LISTS, THEY DO NOT ALIGN
-
-// Different file types & resources
-import './styles.css';
-
-// JS & Modules
 import { WORD_LIST } from './wordList';
 import { VALID_GUESSES } from './validGuesses';
 import { check } from './wordle';
-var alphabet = require('alphabet');
+const alphabet = require('alphabet');
 
-// The main container for the game
+// Styles import
+import './styles.css';
+
+// The main state container for the game
 interface WordleGame {
 	row: number;
 	col: number;
@@ -23,14 +20,13 @@ interface WordleGame {
 	playHistory: number[];
 }
 
-// Standardized stats
 interface Stats {
 	played: number;
 	winPercent: number;
 	inThreePercent: number;
 }
 
-var game: WordleGame = {
+let game: WordleGame = {
 	row: 0,
 	col: 0,
 	secretWord: generateSecretWord(),
@@ -69,11 +65,11 @@ document.getElementById('resetButton').addEventListener('click', () => {
 	game.end = false;
 	game.stateHistory = [];
 
-	// x, y: indexes (as in "var i" for a loop that does not have another loop)
-	for (var x = 0; x < board.childNodes.length; x++) {
+	// x, y: indexes (as in "let i" for a loop that does not have another loop)
+	for (let x = 0; x < board.childNodes.length; x++) {
 		let row = board.childNodes.item(x);
-		for (var y = 0; y < row.childNodes.length; y++) {
-			var col = row.childNodes.item(y);
+		for (let y = 0; y < row.childNodes.length; y++) {
+			let col = row.childNodes.item(y);
 			col.firstChild.textContent = '';
 			// @ts-expect-error
 			col.className = 'input';
@@ -89,12 +85,12 @@ document.getElementById('resetButton').addEventListener('click', () => {
 
 document.getElementById('shareButton').addEventListener('click', () => {
 	if (game.end && game.win) {
-		var shareString: string = `MyWordle ${game.stateHistory.length}/${game.maxTries}\n`;
-		// x, y: indexes (as in "var i" for a loop that does not have another loop)
-		for (var x = 0; x < game.stateHistory.length; x++) {
-			var state: string = game.stateHistory[x];
-			for (var y = 0; y < game.stateHistory[x].length; y++) {
-				var char: string = state[y];
+		let shareString: string = `MyWordle ${game.stateHistory.length}/${game.maxTries}\n`;
+		// x, y: indexes (as in "let i" for a loop that does not have another loop)
+		for (let x = 0; x < game.stateHistory.length; x++) {
+			let state: string = game.stateHistory[x];
+			for (let y = 0; y < game.stateHistory[x].length; y++) {
+				let char: string = state[y];
 				if (char === '0') {
 					shareString += '🟩';
 				} else if (char === '1') {
@@ -109,13 +105,15 @@ document.getElementById('shareButton').addEventListener('click', () => {
 		}
 		navigator.clipboard.writeText(shareString);
 		showMessage('Record copied to clipboard!');
+	} else {
+		showMessage('You must win before you can share your results.');
 	}
 });
 
 document.getElementById('statsButton').addEventListener('click', () => {
-	var played: number = game.playHistory.length;
-	var winNumber: number = 0;
-	var inThreeNumber: number = 0;
+	let played: number = game.playHistory.length;
+	let winNumber: number = 0;
+	let inThreeNumber: number = 0;
 	game.playHistory.forEach((play) => {
 		if (play !== -1) {
 			winNumber++;
@@ -124,7 +122,7 @@ document.getElementById('statsButton').addEventListener('click', () => {
 			inThreeNumber++;
 		}
 	});
-	var stats: Stats = {
+	let stats: Stats = {
 		played: played,
 		winPercent: played === 0 ? 0 : Math.round((winNumber / played) * 100),
 		inThreePercent: played === 0 ? 0 : Math.round((inThreeNumber / played) * 100),
@@ -138,7 +136,7 @@ document.getElementById('keyboard').childNodes.forEach((row) => {
 	row.childNodes.forEach((key) => {
 		key.addEventListener('click', (e) => {
 			// @ts-expect-error
-			var virtKey: string = e.target.getAttribute('key');
+			let virtKey: string = e.target.getAttribute('key');
 			if (virtKey !== 'Enter' && virtKey !== 'Backspace') {
 				input(virtKey);
 			} else if (virtKey === 'Enter' && game.col === 5) {
@@ -171,8 +169,8 @@ function backspace() {
 }
 
 function submit() {
-	var valid: boolean = false;
-	var state: string = ''; // 0: match full; 1: match partial; 2: match none
+	let valid: boolean = false;
+	let state: string = ''; // 0: match full; 1: match partial; 2: match none
 
 	if (VALID_GUESSES.includes(game.currentInput)) {
 		valid = true;
@@ -197,7 +195,7 @@ function flip(state: string) {
 	let board = document.getElementById('board');
 	let keyboard = document.getElementById('keyboard');
 
-	for (var i = 0; i < state.length; i++) {
+	for (let i = 0; i < state.length; i++) {
 		if (state[i] === '0') {
 			// @ts-expect-error
 			board.childNodes.item(game.row).childNodes.item(i).classList.add('state-0');
@@ -245,7 +243,7 @@ function syncPlayHistory() {
 }
 
 function generateSecretWord(): string {
-	var random: number = Math.floor(Math.random() * WORD_LIST.length);
+	let random: number = Math.floor(Math.random() * WORD_LIST.length);
 	return WORD_LIST[random];
 }
 
