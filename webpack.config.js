@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlMinimizerPlugin = require('html-minimizer-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
 	mode: 'development',
@@ -53,7 +54,7 @@ module.exports = {
 		clean: true,
 	},
 	optimization: {
-		minimizer: [new CssMinimizerPlugin(), new HtmlMinimizerPlugin()],
+		minimizer: [new CssMinimizerPlugin(), new HtmlMinimizerPlugin(), new TerserPlugin()],
 		moduleIds: 'deterministic',
 		runtimeChunk: 'single',
 		splitChunks: {
