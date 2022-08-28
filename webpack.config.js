@@ -1,6 +1,9 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlMinimizerPlugin = require('html-minimizer-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 module.exports = {
 	mode: 'development',
@@ -8,16 +11,39 @@ module.exports = {
 	devtool: 'inline-source-map',
 	module: {
 		rules: [
-			{ test: /\.css$/i, use: [MiniCssExtractPlugin.loader, 'css-loader'] },
-			{ test: /\.ts$/, use: 'ts-loader', exclude: /node_modules/ },
+			{
+				test: /\.(js$|ts)$/,
+				loader: 'babel-loader',
+				exclude: /node_modules/,
+			},
+			{
+				test: /\.css$/i,
+				use: ['style-loader', 'css-loader'],
+			},
+			{
+				test: /\.css$/i,
+				use: [MiniCssExtractPlugin.loader, 'css-loader'],
+			},
+			{
+				test: /\.(png|svg|jpg|jpeg|gif)$/i,
+				type: 'asset/resource',
+			},
 		],
 	},
 	resolve: {
-		extensions: ['.tsx', '.ts', '.js'],
+		extensions: ['.ts', '.js'],
 	},
 	plugins: [
+		new ForkTsCheckerWebpackPlugin({
+			typescript: {
+				diagnosticOptions: {
+					semantic: true,
+					syntactic: true,
+				},
+			},
+		}),
 		new HtmlWebpackPlugin({
-			template: 'src/index.html',
+			template: 'src/static/index.html',
 		}),
 		new MiniCssExtractPlugin(),
 	],
@@ -27,6 +53,7 @@ module.exports = {
 		clean: true,
 	},
 	optimization: {
+		minimizer: [new CssMinimizerPlugin(), new HtmlMinimizerPlugin()],
 		moduleIds: 'deterministic',
 		runtimeChunk: 'single',
 		splitChunks: {
