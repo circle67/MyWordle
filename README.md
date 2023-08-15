@@ -4,7 +4,7 @@
 [![Commits](https://img.shields.io/github/commit-activity/m/circle67/MyWordle?style=flat-square)](https://github.com/circle67/MyWordle/commits/main)
 [![Github Pages status](https://img.shields.io/github/deployments/circle67/MyWordle/github-pages?style=flat-square)](https://github.com/circle67/MyWordle/deployments/activity_log?environment=github-pages)
 
-My Wordle clone in pure DOM-manipulating JS for... reasons...
+My Wordle clone in pure DOM-manipulating JS.
 
 ## Demo
 
